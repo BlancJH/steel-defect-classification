@@ -38,3 +38,21 @@ For each experimental setting, the notebook evaluates classification performance
 - **Recall (Macro)**
 
 A held-out test subset (10%) is used for final metrics evaluation to ensure unbiased testing on unseen data. The notebook also demonstrates the training and validation pipelines by tracking losses and F1-scores across epochs, followed by metric visualizations like confusion matrices.
+
+---
+
+## Fine Segmentation Notebook
+
+A second notebook (`steel_defect_segmentation.ipynb`) extends this project from image-level classification to **pixel-level semantic segmentation**, predicting exactly which pixels belong to each of the 4 defect classes.
+
+### Key Features
+- **Architecture**: U-Net with a SegFormer **MiT-B2** Vision Transformer backbone via `segmentation_models_pytorch`.
+- **Data Pipeline**: RLE-decoded masks with synchronized spatial augmentations (`albumentations`).
+- **Loss Function**: Combined Dice Loss + Focal Loss for handling extreme class imbalance.
+- **Visualization**: Colour-coded overlay of predicted defect masks (Red / Green / Blue / Yellow per class).
+
+### Additional Dependencies
+- `segmentation-models-pytorch`
+- `albumentations`
+- `timm`
+- `opencv-python` (`cv2`)

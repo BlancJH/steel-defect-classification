@@ -209,3 +209,5 @@ __marimo__/
 data/severstal-steel-defect-detection
 
 *venv
+
+train_images/*

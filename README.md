@@ -1,49 +1,14 @@
-# Metal Surface Defect Detection
+# Metal Surface Defect Segmentation & Classification
 
-This repository contains a Jupyter Notebook (`steel_defect_classification.ipynb`) that implements multi-label classification of metal surface defects using the [Severstal Steel Defect Detection Dataset](https://www.kaggle.com/competitions/severstal-steel-defect-detection/data).
+This repository contains Jupyter Notebooks focused on identifying and localizing defects on steel surfaces using the [Severstal Steel Defect Detection Dataset](https://www.kaggle.com/competitions/severstal-steel-defect-detection/data).
 
-## Project Overview
-
-The task is to perform multi-label classification to identify 4 different types of defects that can occur on steel surfaces. 
-The notebook explores three different experimental settings:
-
-1. **Baseline (Setting 1)**: A custom Convolutional Neural Network (CNN) trained from scratch.
-2. **Transfer Learning (Setting 2)**: A frozen ResNet-50 backbone with a new classification head, followed by partial fine-tuning of the final convolutional block.
-3. **Advanced Partial Fine-Tuning (Setting 3)**: An EfficientNet-V2-S backbone paired with a highly customized and heavily regularized classification head based on findings from previous experiments.
-
-## Data Preparation
-
-The notebook handles data downloading and preparation dynamically:
-- Automatically downloads training images (via Google Drive `gdown`) and dataset splits (from GitHub).
-- Splits the dataset into 80/10/10 ratios for Train/Validation/Test respectively. The splits are saved locally and reused across runs to ensure consistency.
-- Defines a custom PyTorch `Dataset` (`SteelDefectDataset`) that manages images with and without defects, utilizing multi-hot encoding for the 4 class labels.
-
-## Execution
-
-You can run the notebook locally or on cloud platforms like Google Colab.
-
-### Requirements
-
-To run the notebook, install the necessary dependencies:
-- PyTorch (`torch`, `torchvision`)
-- Data manipulation and modeling: `pandas`, `numpy`, `scikit-learn`
-- Visualization: `matplotlib`
-- Utilities: `gdown` (for Drive downloads), `Pillow` (for images)
-
-## Evaluation Metrics
-
-For each experimental setting, the notebook evaluates classification performance using:
-- **F1-Score (Macro)**
-- **Precision (Macro)**
-- **Recall (Macro)**
-
-A held-out test subset (10%) is used for final metrics evaluation to ensure unbiased testing on unseen data. The notebook also demonstrates the training and validation pipelines by tracking losses and F1-scores across epochs, followed by metric visualizations like confusion matrices.
+The primary focus of this repository is **pixel-level semantic segmentation** to precisely locate defects and their classes, with a supplementary **multi-label classification** approach for lightweight experimentation.
 
 ---
 
-## Fine Segmentation Notebook
+## 🌟 Main Model: Semantic Segmentation (`steel_defect_segmentation.ipynb`)
 
-A second notebook (`steel_defect_segmentation.ipynb`) extends this project from image-level classification to **pixel-level semantic segmentation**, predicting exactly which pixels belong to each of the 4 defect classes.
+Our main model extends beyond image-level classification to perform **pixel-level semantic segmentation**, predicting exactly which pixels belong to each of the 4 defect classes.
 
 ### Key Features
 - **Architecture**: U-Net with a SegFormer **MiT-B2** Vision Transformer backbone via `segmentation_models_pytorch`.
@@ -51,8 +16,75 @@ A second notebook (`steel_defect_segmentation.ipynb`) extends this project from 
 - **Loss Function**: Combined Dice Loss + Focal Loss for handling extreme class imbalance.
 - **Visualization**: Colour-coded overlay of predicted defect masks (Red / Green / Blue / Yellow per class).
 
-### Additional Dependencies
-- `segmentation-models-pytorch`
-- `albumentations`
-- `timm`
-- `opencv-python` (`cv2`)
+---
+
+## 🔬 Lightweight Experiments: Classification (`steel_defect_classification.ipynb`)
+
+For faster iteration and lightweight modeling, we also include a multi-label classification notebook. It identifies whether an image contains any of the 4 types of defects (without localizing them).
+
+The notebook explores three experimental settings:
+1. **Baseline (Setting 1)**: A custom Convolutional Neural Network (CNN) trained from scratch.
+2. **Transfer Learning (Setting 2)**: A frozen ResNet-50 backbone with a new classification head, followed by partial fine-tuning.
+3. **Advanced Partial Fine-Tuning (Setting 3)**: An EfficientNet-V2-S backbone paired with a highly customized and heavily regularized classification head.
+
+---
+
+## 🚀 Step-by-Step Setup Guide
+
+Follow these instructions to set up the environment and run the notebooks locally.
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/BlancJH/metal-defect-classification.git
+cd metal-defect-classification
+```
+
+### 2. Set Up a Virtual Environment (Recommended)
+It is highly recommended to use a Python virtual environment to manage dependencies.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows, use: .venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+Install the required packages. Ensure you have the correct version of PyTorch for your system (CUDA recommended for GPU acceleration).
+
+```bash
+# Core Machine Learning & Data Processing
+pip install torch torchvision
+pip install pandas numpy scikit-learn matplotlib Pillow opencv-python
+
+# Utility for Dataset Downloads
+pip install gdown
+
+# Segmentation & Augmentation Specific
+pip install segmentation-models-pytorch albumentations timm
+
+# Jupyter to run the notebooks
+pip install jupyter
+```
+
+*(Note: For PyTorch with CUDA, please refer to the [official PyTorch installation guide](https://pytorch.org/get-started/locally/) for your specific system.)*
+
+### 4. Data Preparation
+Both notebooks are configured to handle data downloading and preparation dynamically. You **do not** need to manually download the dataset beforehand.
+- The notebooks will automatically download training images (via Google Drive `gdown`) and dataset splits.
+- The data will be split into 80/10/10 ratios for Train/Validation/Test respectively and saved locally to ensure consistency across runs.
+
+### 5. Run the Notebooks
+Launch Jupyter Notebook:
+```bash
+jupyter notebook
+```
+Open `steel_defect_segmentation.ipynb` (Main Model) or `steel_defect_classification.ipynb` (Lightweight Experiment) and execute the cells sequentially.
+
+---
+
+## 📊 Evaluation Metrics
+
+Depending on the notebook, the models are evaluated using appropriate metrics on a held-out test subset (10%):
+
+- **Segmentation**: Pixel-level accuracy, Intersection over Union (IoU), and Dice Coefficient.
+- **Classification**: F1-Score (Macro), Precision (Macro), and Recall (Macro).
+
+Training and validation pipelines are fully visible, tracking losses and performance metrics across epochs, culminating in comprehensive metric visualizations.

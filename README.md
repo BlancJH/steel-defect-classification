@@ -8,7 +8,7 @@ The primary focus of this repository is **pixel-level semantic segmentation** to
 
 ## 🌟 Main Model: Semantic Segmentation (`steel_defect_segmentation.ipynb`)
 
-Our main model extends beyond image-level classification to perform **pixel-level semantic segmentation**, predicting exactly which pixels belong to each of the 4 defect classes.
+The main model extends beyond image-level classification to perform **pixel-level semantic segmentation**, predicting exactly which pixels belong to each of the 4 defect classes.
 
 ### Key Features
 - **Architecture**: U-Net with a SegFormer **MiT-B2** Vision Transformer backbone via `segmentation_models_pytorch`.
